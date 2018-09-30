@@ -14,7 +14,7 @@ const WEEKEND_IDX = 2;
 
 // Chargement du fichier .csv contenant les données
 // Attention: operation asynchrone! Le reste du code doit être dans la routine callback.
-d3.csv("data/mean_trips_per_day_per_time_slots.csv", chartDataReady);
+d3.csv("data/bike-mean-trips-per-day-per-timeslot.csv", chartDataReady);
 
 // Fonction appelée quand le .csv a été lu
 function chartDataReady(error, csv) {
