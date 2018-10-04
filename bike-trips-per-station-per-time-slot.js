@@ -5,7 +5,7 @@
 // Using:
 // Bootstrap slider widget: https://seiyria.com/bootstrap-slider/
 
-var debug = true;
+var debug = false;
 var weekend = false;
 var timeSlot = 16;
 
@@ -26,7 +26,7 @@ const LONG_IDX        = 2;
 const START_SLOTS_IDX = 3;
 const END_SLOTS_IDX   = SLOTS_PER_DAY + START_SLOTS_IDX;
 
-// Parse l'objet .csv chargé et construit un tableau de données qui sera 
+// Parse l'objet .csv chargé et construit un tableau de données qui sera
 // exploité pour dessiner les graphiques.
 function parseCsvData(csv, stationsData) {
 
@@ -60,7 +60,7 @@ function weekdayStationsDataReady(error, csv) {
     parseCsvData(csv, weekdayStationsData);
     drawStations(weekdayStationsData);
     console.log("data length: " + weekdayStationsData.length);
-    
+
     d3.csv("data/trips_per_station_per_time_slot_weekend.csv", weekendStationsDataReady);
 }
 
@@ -81,8 +81,8 @@ function drawStations(stationsData) {
 
     var minArc = 15;
     var maxArc = 50;
-    var mapWidth   = 700;
-    var mapHeight  = 700;
+    var mapWidth   = 950;
+    var mapHeight  = 1103;
     var mapPadding = minArc;
 
     // Determine les minimum/maximum pour la latitude et la longitude des stations
@@ -92,10 +92,10 @@ function drawStations(stationsData) {
     var maxLong = d3.max(stationsData, function(x) { return x[LONG_IDX]; });
     var centerLat = minLat + ((maxLat - minLat) / 2);
     var centerLong = minLong + ((maxLong - minLong) / 2);
-    
+
     // Adjust height
-    mapHeight = Math.floor((mapWidth * Math.abs(maxLong - minLong)) / Math.abs(maxLat - minLat));
-    
+    //mapHeight = Math.floor((mapWidth * Math.abs(maxLat - minLat)) / Math.abs(maxLong - minLong));
+
     // Determine le nombre maximum de voyages enregistrés pour un time slot
     var maxTrips = d3.max(stationsData, function(x) {
         return x.slice(START_SLOTS_IDX, END_SLOTS_IDX + SLOTS_PER_DAY)
@@ -107,10 +107,10 @@ function drawStations(stationsData) {
         console.log(`Longitude: min=${minLong} max=${maxLong} center=${centerLong} mapHeight=${mapHeight}`);
         console.log(`Trip count: max=${maxTrips}`);
     }
-    
+
     // Calcul les echelles en fonction des données
-    var scaleX = d3.scale.linear().domain([minLat, maxLat]).range([0+mapPadding, mapWidth-mapPadding]);
-    var scaleY = d3.scale.linear().domain([minLong, maxLong]).range([0+mapPadding, mapHeight-mapPadding]);
+    var scaleX = d3.scale.linear().domain([minLong, maxLong]).range([0+mapPadding, mapWidth-mapPadding]);
+    var scaleY = d3.scale.linear().domain([minLat, maxLat]).range([mapHeight-mapPadding, 0+mapPadding]);
     var scaleTripCount = d3.scale.linear().domain([0, maxTrips]).range([0, maxArc]);
 
     // Ajout d'un div pour le tooltip
@@ -139,34 +139,32 @@ function drawStations(stationsData) {
     // Creer le graphe
     var chart = d3.select("#svgchart")
         .attr("width", mapWidth)
-		.attr("height", mapHeight);
+        .attr("height", mapHeight);
 
     // Add background image
-    /*
     chart.append("defs")
         .append("pattern")
             .attr("id", "bgimage")
             .attr('patternUnits', 'userSpaceOnUse')
-            .attr('width', chartWidth )
-            .attr('height', chartHeight)
-        .append("image")
-            .attr("xlink:href", "images/los-angeles-metro-bike-blurred.jpg")
             .attr('width', mapWidth )
-            .attr('height', chartHeight);
+            .attr('height',mapHeight)
+        .append("image")
+            .attr("xlink:href", "images/los-angeles-map.png")
+            .attr('width', mapWidth )
+            .attr('height', mapHeight);
     chart.append("rect")
-        .attr("width", chartWidth)
-		.attr("height", chartHeight)
+        .attr("width", mapWidth)
+        .attr("height", mapHeight)
         .attr("fill", "url(#bgimage)");
-    */
 
     // Ajoute autant d'élément g que de lignes de données
     // et positione les éléments
     var oneStation = chart.selectAll("g")
         .data(stationsData)
-		.enter().append("g")
-		.attr("transform", function(d, i) {
-            var x = scaleX(d[LAT_IDX]);
-            var y = scaleY(d[LONG_IDX]);
+        .enter().append("g")
+        .attr("transform", function(d, i) {
+            var x = scaleX(d[LONG_IDX]);
+            var y = scaleY(d[LAT_IDX]);
             return `translate(${x}, ${y})`;
         });
 
@@ -179,19 +177,19 @@ function drawStations(stationsData) {
         .attr("fill-opacity", 0.9)
         .on("mouseover", function(d, i) {
             d3.select(this)
-            	.attr("fill", "#ccfb76");
+                .attr("fill", "#ccfb76");
             tooltip.transition()
                 .duration(200)
                 .style("opacity", 0.9);
             tooltip.html("<strong>Station " + d[ID_IDX] + "</strong></br>" +
-                         "Departures: " + d[START_SLOTS_IDX  + timeSlot] + "</br>" +
-                         "Arrivals: " + d[END_SLOTS_IDX  + timeSlot])
+                         "Départs: " + d[START_SLOTS_IDX  + timeSlot] + "</br>" +
+                         "Arrivées: " + d[END_SLOTS_IDX  + timeSlot])
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
             })
         .on("mouseout", function(d) {
             d3.select(this)
-            	.attr("fill", "#a0d53f");
+                .attr("fill", "#a0d53f");
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
@@ -202,7 +200,7 @@ function drawStations(stationsData) {
         .style("fill", "green")
         .attr("fill-opacity", 0.6)
         .attr("d", drawStartArc);
-        
+
     // Dessine l'arc représentant le nombre d'arrivées à la station
     oneStation.append("path")
         .style("fill", "red")
@@ -241,14 +239,14 @@ d3.csv("data/trips_per_station_per_time_slot_weekday.csv", weekdayStationsDataRe
 
 // Le slider pour changer l'interval de temps
 $('#timeSlider').slider({
-	formatter: function(value) {
-		return slotsLabels[value] + "-" + slotsLabels[(value + 1) % SLOTS_PER_DAY];
-	}
+    formatter: function(value) {
+        return slotsLabels[value] + "-" + slotsLabels[(value + 1) % SLOTS_PER_DAY];
+    }
 });
 
 $("#timeSlider").on("slide", function(slideEvt) {
     timeSlot = slideEvt.value;
-	$("#timeSliderVal").text(slotsLabels[timeSlot] + "-" + slotsLabels[(timeSlot + 1) % SLOTS_PER_DAY]);
+    $("#timeSliderVal").text(slotsLabels[timeSlot] + "-" + slotsLabels[(timeSlot + 1) % SLOTS_PER_DAY]);
     // Re-dessiner le graphique pour le nouvel interval
     d3.select("#svgchart").selectAll("*").remove();
     if (weekend) {

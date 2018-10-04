@@ -2,6 +2,17 @@
 <head>
     <meta charset="utf-8">
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- slider widget -->
+    <link rel="stylesheet" href="external/css/bootstrap-slider.min.css">
+    <script type='text/javascript' src="external/bootstrap-slider.min.js"></script>
+
+    <!-- D3JS-->
+    <script type='text/javascript' src="http://d3js.org/d3.v3.min.js"></script>
+
     <style>
 
         .MyChart a {
@@ -29,18 +40,12 @@
             border-radius: 8px;
             pointer-events: none;
         }
+
+        .slider-selection {
+            background: #a0d53f;
+        }
     </style>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- slider widget -->
-    <link rel="stylesheet" href="external/css/bootstrap-slider.min.css">
-    <script type='text/javascript' src="external/bootstrap-slider.min.js"></script>
-
-    <!-- D3JS-->
-    <script type='text/javascript' src="http://d3js.org/d3.v3.min.js"></script>
 
     <title>Visualisation de données 2018-2019 TP1</title>
 
@@ -69,7 +74,7 @@
                         <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
                         <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
                     </div>
-                    Horaire: <input id="timeSlider" type="text" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
+                    Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
                     <span id="timeSliderVal">08:00-08:30</span>
                 </div>
                 <div class="row" style="padding: 8;">
