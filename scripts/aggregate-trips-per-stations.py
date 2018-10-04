@@ -58,22 +58,25 @@ def date_to_slot(date):
     return (date.hour * slots_per_hours) + (date.minute // slot_duration)
 
 
-def insert_station(station_id, stations):
+def insert_station(station_id, station_lat, station_long):
     '''Insert new station in global stations dictionary and init slots values to 0'''
-    if not station_id in stations:
-        stations[station_id] = {}
-        stations[station_id]['start'] = [ 0 for i in range(slots_per_day)]
-        stations[station_id]['end'] = [ 0 for i in range(slots_per_day)]
+    for stations in (stations_weekday, stations_weekend):
+        if not station_id in stations:
+            stations[station_id] = {}
+            stations[station_id]['lat']   = station_lat
+            stations[station_id]['long']  = station_long
+            stations[station_id]['start'] = [ 0 for i in range(slots_per_day)]
+            stations[station_id]['end']   = [ 0 for i in range(slots_per_day)]
+        else:
+            # Try to fill missing data (there is a bunch of invalid rows in the data set)
+            if stations[station_id]['lat'] in (0, ""):
+                stations[station_id]['lat'] = station_lat
+            if stations[station_id]['long'] in (0, ""):
+                stations[station_id]['long'] = station_long
 
 
 def insert_trip(start_station, start_date, end_station, end_date):
     '''Insert trip started at specified date into the relevant array depending on the day of the week'''
-    # Insert station in dictionaries if it hasn't been seen before
-    for station_id in (start_station, end_station):
-        if not station_id in stations_weekday:
-            insert_station(station_id, stations_weekday)
-        if not station_id in stations_weekend:
-            insert_station(station_id, stations_weekend)
 
     # Increase relevant slot counter
     is_weekend = (start_date.isoweekday() in (6, 7))
@@ -82,7 +85,7 @@ def insert_trip(start_station, start_date, end_station, end_date):
         stations_weekend[start_station]['start'][slot] += 1
     else:
         stations_weekday[start_station]['start'][slot] += 1
-    
+
     is_weekend = (end_date.isoweekday() in (6, 7))
     slot = date_to_slot(end_date)
     if is_weekend:
@@ -97,12 +100,23 @@ def save_csv(stations, out_filename):
     end_slots   = [ f"end_slot_{slot}" for slot in range(slots_per_day)]
 
     with open(out_filename, 'w', newline='') as csvfile:
-        fieldnames = ['station_id'] + start_slots + end_slots
+        fieldnames = ['station_id', 'station_lat', 'station_long'] + start_slots + end_slots
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=',')
 
         writer.writeheader()
         for station in stations:
-            row_dict = { 'station_id' : station }
+            if stations[station]['lat'] == '' or \
+               stations[station]['long'] == '' or \
+               station in ("3009", "3039"):
+                # Skip station with no coordinates or stations that in
+                # the black list (too far from the other stations)
+                continue
+
+            row_dict = {
+                'station_id' : station,
+                'station_lat' : stations[station]['lat'],
+                'station_long' : stations[station]['long']
+            }
             for slot in range(slots_per_day):
                 row_dict[f"start_slot_{slot}"] = stations[station]['start'][slot]
                 row_dict[f"end_slot_{slot}"] = stations[station]['end'][slot]
@@ -119,29 +133,40 @@ def filter_trips(in_filename, out_directory):
     with open(in_filename, 'r') as cvsfile:
         reader = csv.DictReader(cvsfile, delimiter=';')
         for row in reader:
-            s_id_start = row['Starting Station ID']
-            t_start    = row['Start Time']
-            s_id_end   = row['Ending Station ID']
-            t_end      = row['End Time']
+            start_id   = row['Starting Station ID']
+            start_lat  = row['Starting Station Latitude']
+            start_long = row['Starting Station Longitude']
+            start_time = row['Start Time']
+            end_id     = row['Ending Station ID']
+            end_lat    = row['Ending Station Latitude']
+            end_long   = row['Ending Station Longitude']
+            end_time   = row['End Time']
+
             # Is it a valid row?
-            if t_start == '' or t_end == '' or s_id_start == '' or s_id_end == '' :
+            if start_time == '' or end_time == '' or \
+               start_id == '' or end_id == '':
                 incomplete_rows += 1
                 continue
+
             # Convert time from "2017-03-19T14:18:00" format
-            d_start = datetime.strptime(t_start, "%Y-%m-%dT%H:%M:%S")
-            d_end = datetime.strptime(t_end, "%Y-%m-%dT%H:%M:%S")
+            start_date = datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+            end_date = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+
+            # Insert station in dictionaries if it hasn't been seen before
+            insert_station(start_id, start_lat, start_long)
+            insert_station(end_id, end_lat, end_long)
 
             # Increment relevant slots
-            insert_trip(s_id_start, d_start, s_id_end, d_end)
+            insert_trip(start_id, start_date, end_id, end_date)
 
             # Get oldest and newest date
             if first:
                 first = False
-                min_date = d_start
-                max_date = d_end
+                min_date = start_date
+                max_date = end_date
             else:
-                min_date = min(min_date, d_start)
-                max_date = max(max_date, d_end)
+                min_date = min(min_date, start_date)
+                max_date = max(max_date, end_date)
 
     # Divide counters in each slot by the number of relevant days
     delta_date = max_date - min_date
@@ -158,7 +183,7 @@ def filter_trips(in_filename, out_directory):
     # Display
     for stations in (stations_weekday, stations_weekend):
         for s in stations:
-            print(f'Station:{s}')
+            print(f"Station:{s} ({stations[s]['lat']}, {stations[s]['long']})")
             print('Trip starts: ', end='')
             for count in stations[s]['start']:
                 print(f"{count} / ", end='')
@@ -169,8 +194,8 @@ def filter_trips(in_filename, out_directory):
 
     # print(f"Mean starts/week day    = {round(sum(weekday_start))}")
     # print(f"Mean ends/week days     = {round(sum(weekday_end))}")
-    # print(f"Mean starts/weekend day = {round(sum(weekend_start))}")
-    # print(f"Mean ends/weekend days  = {round(sum(weekend_end))}")
+    # print(f"Mean starts/weekend day = {round(sum(weekenstart_date))}")
+    # print(f"Mean ends/weekend days  = {round(sum(weekenend_date))}")
 
     print(f"Oldest date = {min_date}")
     print(f"Newest date = {max_date}")
