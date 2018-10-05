@@ -44,6 +44,11 @@
         .slider-selection {
             background: #a0d53f;
         }
+
+        th, td {
+            vertical-align: top;
+            padding: 8px;
+        }
     </style>
 
 
@@ -71,17 +76,26 @@
 
             <div class="panel-body">
                 <div class="row" style="padding: 8;">
-                    <div class="btn-group" id="day-selector">
-                        <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
-                        <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
-                    </div>
-                    Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
-                    <span id="timeSliderVal">08:00-08:30</span>
-                    <img src="images/legende-station.png" align="middle"/>
+                        <div class="btn-group" id="day-selector">
+                            <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
+                            <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
+                        </div>
+                        Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
+                        <!--<span id="timeSliderVal">08:00-08:30</span>-->
                 </div>
                 <div class="row" style="padding: 8;">
-                    <!-- Le graphique est inséré ici -->
-                    <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
+                    <table>
+                    <tr>
+                        <td>
+                            <!-- Le graphique est inséré ici -->
+                            <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
+                        </td>
+                        <td>
+                            <!-- Legende -->
+                            <img src="images/legende-station.png" align="middle"/>
+                        </td>
+                    </tr>
+                    </table>
                 </div>
             </div>
         </div>

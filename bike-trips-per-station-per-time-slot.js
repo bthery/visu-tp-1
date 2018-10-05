@@ -213,6 +213,16 @@ function drawStations(stationsData) {
         .attr("text-anchor", "middle")
         .text(function(d) { return "" + d[0]; });
 
+    // Ajoute l'interval de temps
+    chart.append("text")
+        .attr("x", 50)
+        .attr("y", 50)
+        .attr("text-anchor", "left")
+        .attr("fill-opacity", 0.7)
+        .style("font-size", "24px")
+        .style("font-weight", "bold")
+        .text(function(d) { return slotsLabels[timeSlot];});
+
     console.log("Chart drawn !");
 } // drawStations()
 
