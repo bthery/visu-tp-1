@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- slider widget -->
-    <link rel="stylesheet" href="external/css/bootstrap-slider.min.css">
-    <script type='text/javascript' src="external/bootstrap-slider.min.js"></script>
+    <!-- Slider widget -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/css/bootstrap-slider.min.css">
+    <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/bootstrap-slider.min.js"></script>
 
     <!-- D3JS-->
     <script type='text/javascript' src="http://d3js.org/d3.v3.min.js"></script>
@@ -17,7 +17,7 @@
 
         .MyChart a {
             background: #a0d53f;
-            padding: 4;
+            padding: 4px;
             border: 2px;
             border-radius: 8px;
         }
@@ -47,15 +47,16 @@
     </style>
 
 
-    <title>Visualisation de données 2018-2019 TP1</title>
+    <title>Visualisation des données 2018-2019 TP1</title>
 
 </head>
 <body>
     <div class="container-fluid">
 
-        <div class="jumbotron text-center">
-            Mastère Big Data 2018-2019: Visualisation de données TP1
-            <h2>Los Angeles Metro Bike Share</h2>
+        <div class="jumbotron text-center" style="padding: 8px;" >
+            Mastère Big Data 2018-2019: Visualisation des données TP1</br>
+            Cécile Boukamel-Donnou / Benjamin Thery
+            <h3><strong>Los Angeles Metro Bike Share</strong></h3>
              <div class="MyChart">
                 <a href="https://bikeshare.metro.net/about/">About</a>
                 <a href="https://bikeshare.metro.net/stations/">Stations</a>
@@ -64,8 +65,8 @@
       </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Départs et arrivées de vélos dans chaque station au cours de la journée</h3>
+            <div class="panel-heading" style="padding: 8;">
+                <h4><strong>Départs et arrivées de vélos dans chaque station au cours de la journée</strong></h4>
             </div>
 
             <div class="panel-body">
@@ -76,9 +77,10 @@
                     </div>
                     Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
                     <span id="timeSliderVal">08:00-08:30</span>
+                    <img src="images/legende-station.png" align="middle"/>
                 </div>
                 <div class="row" style="padding: 8;">
-                    <!-- Le graphe est ici -->
+                    <!-- Le graphique est inséré ici -->
                     <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
                 </div>
             </div>

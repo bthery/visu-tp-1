@@ -141,7 +141,7 @@ function drawStations(stationsData) {
         .attr("width", mapWidth)
         .attr("height", mapHeight);
 
-    // Add background image
+    // Ajout de la carte dans le fond
     chart.append("defs")
         .append("pattern")
             .attr("id", "bgimage")
@@ -174,7 +174,7 @@ function drawStations(stationsData) {
         .attr("stroke-fill", "black")
         .attr("stroke-width", 3)
         .attr("fill", "#a0d53f")
-        .attr("fill-opacity", 0.9)
+        .attr("fill-opacity", 0.6)
         .on("mouseover", function(d, i) {
             d3.select(this)
                 .attr("fill", "#ccfb76");
