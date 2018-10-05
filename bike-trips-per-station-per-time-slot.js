@@ -214,14 +214,19 @@ function drawStations(stationsData) {
         .text(function(d) { return "" + d[0]; });
 
     console.log("Chart drawn !");
-}
+} // drawStations()
 
-// Initialise une table contenant les labels des intervals de temps: ex. "13:30"
+// Initialise une table contenant les labels des intervals de temps: ex. "13:30-14:00"
 function initTimeSlotsLabels() {
+
+    var slotLabel = function(s) {
+        var hours = Math.floor(s / SLOTS_PER_HOUR);
+        var minutes = (s % SLOTS_PER_HOUR) * SLOT_DURATION;
+        return ("00" + hours).substr(-2) + ":" + ("00" + minutes).substr(-2);
+    };
+
     for (slot = 0; slot < SLOTS_PER_DAY; slot++) {
-        var hours = Math.floor(slot / SLOTS_PER_HOUR);
-        var minutes = (slot % SLOTS_PER_HOUR) * SLOT_DURATION;
-        slotsLabels[slot] = ("00" + hours).substr(-2) + ":" + ("00" + minutes).substr(-2);
+        slotsLabels[slot] = slotLabel(slot) + "-" + slotLabel((slot + 1) % SLOTS_PER_DAY);
     }
     if (debug)
         console.log("Time slots labels: " + slotsLabels);
@@ -240,13 +245,13 @@ d3.csv("data/trips_per_station_per_time_slot_weekday.csv", weekdayStationsDataRe
 // Le slider pour changer l'interval de temps
 $('#timeSlider').slider({
     formatter: function(value) {
-        return slotsLabels[value] + "-" + slotsLabels[(value + 1) % SLOTS_PER_DAY];
+        return slotsLabels[value];
     }
 });
 
 $("#timeSlider").on("slide", function(slideEvt) {
     timeSlot = slideEvt.value;
-    $("#timeSliderVal").text(slotsLabels[timeSlot] + "-" + slotsLabels[(timeSlot + 1) % SLOTS_PER_DAY]);
+    $("#timeSliderVal").text(slotsLabels[timeSlot]);
     // Re-dessiner le graphique pour le nouvel interval
     d3.select("#svgchart").selectAll("*").remove();
     if (weekend) {
