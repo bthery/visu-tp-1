@@ -1,13 +1,23 @@
 <html>
-
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Slider widget -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/css/bootstrap-slider.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/bootstrap-slider.min.js"></script>
 
-    .MyChart a {
+    <!-- D3JS-->
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <style>
+
+        .MyChart a {
             background: #a0d53f;
-            padding: 4;
+            padding: 4px;
             border: 2px;
             border-radius: 8px;
         }
@@ -17,53 +27,6 @@
             font: 10px sans-serif;
             text-anchor: begin;
         }
-
-
-        .axis text {
-            font: 14px sans-serif;
-        }
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: black;
-            stroke-width: 2;
-            opacity: 0.2;
-            shape-rendering: crispEdges;
-        }
-		.tab
-        {
-                border-radius: 30px;
-                display:inline-block;
-                margin-left:3px;
-                margin-right:3px;
-                padding:3px;
-                border:1px solid #aea9a9 ;
-                cursor:pointer;
-                background:#dddddd
-        }
-        .tab_0
-        {
-                /*background:#f4f1f1;*/
-                background:#dddddd
-                border-bottom:1px solid #d6d5d5;
-                color: grey;
-        }
-        .tab_1
-        {
-                background:#eee;
-                border-bottom:0px solid black;
-                padding-bottom:4px;
-                font-weight: 700;
-        }
-        .tab_contains
-        {
-                background-color:#dddddd;
-                border:1px solid black;
-                margin-top:-1px;
-                padding:5px;
-                display:none;
-        }
-
 
         div.tooltip {
             position: absolute;
@@ -82,135 +45,214 @@
             background: #a0d53f;
         }
 
-        th, td {
+        .MyTable th, td {
             vertical-align: top;
             padding: 8px;
         }
-        .legend {
-          padding: 4;
-          border: 2px;
-          border-radius: 8px;
-          font: 14px sans-serif;
-        }
 
+        .axis text {
+            font: 14px sans-serif;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            stroke-width: 2;
+            opacity: 0.2;
+            shape-rendering: crispEdges;
+        }
 	</style>
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <!-- Slider widget -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/css/bootstrap-slider.min.css">
-  <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/bootstrap-slider.min.js"></script>
-  <!-- D3JS-->
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-
-  <script type="text/javascript">
-  // onglets
-    function change_tab(name) {
-      document.getElementById('tab_' + anc_tab).className = 'tab_0 tab';
-      document.getElementById('tab_' + name).className = 'tab_1 tab';
-      document.getElementById('tab_contains_' + anc_tab).style.display = 'none';
-      document.getElementById('tab_contains_' + name).style.display = 'block';
-      anc_tab = name;
-    }
-
-  </script>
-  <title>Visualisation de données 2018-2019 TP1</title>
+	<title>Visualisation de données 2018-2019 TP1</title>
 
 </head>
-
 <body>
-  <div class="container-fluid">
+    <div class="container-fluid">
 
-    <div class="jumbotron text-center">
-      Mastère Big Data 2018-2019: Visualisation de données TP1
-      <h2>Los Angeles Metro Bike Share</h2>
-      <div class="MyChart">
-        <a href="https://bikeshare.metro.net/about/">About</a>
-        <a href="https://bikeshare.metro.net/stations/">Stations</a>
-        <a href="https://www.kaggle.com/cityofLA/los-angeles-metro-bike-share-trip-data">Open Data</a>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="tab_0 tab" id="tab_space" onclick="javascript:change_tab('space');"> Voyage dans le temps et dans l'espace</h3>
-          <h4 class="tab_0 tab" id="tab_means" onclick="javascript:change_tab('means');"> Nombre moyen de voyages commencés par demi-heure au cours de la journée</h3>
-      </div>
-      <div class="panel-body">
-        <!-- nombre de voyage moyens -->
-        <div class="tab_contains" id="tab_contains_means">
-
-          <div class="row" style="padding: 8;">
-            <div class="btn-group" id="day-selector">
-              <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
-              <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
+        <div class="jumbotron text-center">
+            Mastère Big Data 2018-2019: Visualisation des données TP1</br>
+            Cécile Boukamel-Donnou / Benjamin Thery
+            <h2>Los Angeles Metro Bike Share</h2>
+             <div class="MyChart">
+                <a href="https://bikeshare.metro.net/about/">About</a>
+                <a href="https://bikeshare.metro.net/stations/">Stations</a>
+                <a href="https://www.kaggle.com/cityofLA/los-angeles-metro-bike-share-trip-data">Open Data</a>
             </div>
-          </div>
-          <div class="row" style="padding: 8;">
-            <table>
-              <tr>
-                <td>
-                  <!-- Le graphe est ici -->
-                  <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
-                </td>
-                <td class="legend">
-                  <h4>Legende</h4>
-                  <p>Ce graphique permet de visualiser le nombre de déplacements selon les heures de la journée.</p>
-                  <p><b>Les heures</b>, <b>variables quantitative d'intervalle</b>, sont représentés en <b>position</b> sur l'abscisse.</p>
-                  <p><b>Le nombre de déplacements</b> qui est <b>une variable quantitative de rapport</b>, sont eux , visualisé par la <b>taille</b> de la hauteur d'un rectangle.</p>
-                </td>
-            </table>
-          </div>
         </div>
-        <!-- nombre de voyage dans l'espace -->
-        <div class="tab_contains" id="tab_contains_space">
 
-          <div class="row" style="padding: 8;">
-            <div class="btn-group" id="day-selector">
-              <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
-              <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
-            </div>
-            Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16" />
-            <!--<span id="timeSliderVal">08:00-08:30</span>-->
-          </div>
-          <div class="row" style="padding: 8;">
-            <table>
-              <tr>
-                <td>
-                  <!-- Le graphique est inséré ici -->
-                  <svg class="MyChart" id="svgchartmap" style="background-color: #B8B8B8;"></svg>
-                </td>
-                <td class="legend">
-                  <h3>Legende</h3>
-                  <!-- Legende -->
-                  <h5> Cette carte permet de visualiser les arrivées et départs de chaque station de location de vélos de la ville de Los Angeles.</h5>
-                  <img src="images/legende-station.png" style="display: block ;margin-left: auto; margin-right: auto" />
-                  <p>
-                    La <b> localisation des stations</b>, qui est une <b>variable ordinale</b> , a tout naturellement été décrite par la <b>position</b> sur la carte.</p>
-                  <p>
-                    la <b>variable ordinale</b> du <b>type de mouvement</b> : arrivé ou départ est visualisée par une<b>couleur</b> : vert pour les départs, rouge pour les arrivées.</p>
-                  <p>
-                    les <b>nombres d'arrivées</b> et de départs qui sont des <b>variables numériques de rapport</b> sont ici représentés par la <b>taille</b> du contour du point.
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#graph_bar"><strong>Graphique 1</strong></a></li>
+            <li><a data-toggle="tab" href="#graph_map"><strong>Graphique 2</strong></a></li>
+        </ul>
 
-  <!-- Chargement du script pour lire les données et tracer le graphe -->
-  <script src=bike-mean-trips-per-day-per-timeslot.js></script>
-  <script type='text/javascript' src="bike-trips-per-station-per-time-slot.js"></script>
+        <div class="tab-content">
 
-  <script type="text/javascript">
-    var anc_tab = 'space';
-    change_tab(anc_tab);
-  </script>
-  <noscript>Vous devez activer JavaScript sur votre navigateur pour voir cette page</noscript>
+            <!-- Graphique 1 : Nombre de voyages moyen par interval de temps -->
+            <div id="graph_bar" class="tab-pane fade in active">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><strong>Nombre moyen de voyages commencés par demi-heure au cours de la journée</strong></h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row" style="padding: 8;">
+                        <div class="btn-group" id="day-selector">
+                            <button type="button" class="btn btn-primary active" id="weekday_button_bar">Semaine</button>
+                            <button type="button" class="btn btn-primary" id="weekend_button_bar">Week-end</button>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 8;">
+                        <table class="MyTable" >
+                            <tr>
+                            <td>
+                                <!-- Le graphique est inséré ici -->
+                                <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
+                            </td>
+                            <td>
+                                <!-- Description et legende -->
+                                <h3>Description</h3>
+                                <h4>Les données</h4>
+                                <p>Les données présentées dans cette page proviennent d'un <strong>service de
+                                partage de vélos de la ville de Los Angeles</strong>. Elles sont constitués des
+                                enregistrement d'un peu plus de 132 000 voyages effectués sur une
+                                période de 269 jours, entre juillet 2016 et avril 2017. Pour chaque voyage
+                                sont connus ses stations de départ et d'arrivée, la position
+                                géographique de ces stations, les heures des départ et d'arrivée, le
+                                type d'abonnement utilisé.</p>
+
+                                <p><a href="data/metro-bike-share-trip-data-orig.csv.zip">Fichier .csv original (zip)</a></p>
+
+                                <p>Pour réaliser les graphiques nous avons pré-filtré ces données a
+                                l'aide de scripts Python pour constituer des fichiers .csv de taille
+                                plus petite pour faciliter leur exploitation.</p>
+
+                                <a type="text/plain" href="data/bike-mean-trips-per-day-per-timeslot.csv">Fichier .csv</a> -
+                                <a href="scripts">Scripts Python</a>
+
+                                <h4>La visualisation</h4>
+                                <p>Cette visualisation présente sous forme de graphique en barre le
+                                <strong>nombre moyen de voyages</strong> débutés durant chaque demi-heure au cours de la
+                                journée sur l'ensemble du réseau. </p>
+
+                                <p><strong>Les heures, variables quantitative d'intervalle</strong>, sont
+                                représentés en <strong>position</strong> sur l'abscisse.</p>
+
+                                <p><strong>Le nombre de voyages</strong> qui est une <strong>variable
+                                quantitative de rapport</strong>, est lui visualisé par la taille de la
+                                hauteur d'un rectangle.</p>
+
+                                <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un <i>tooltip</i> s'affichant lorsque l'on pointe une barre du graphique</p>
+
+                                <p>Les données peuvent être affichées pour les jours de
+                                <strong>semaine</strong> (lundi-vendredi) ou de <strong>weekend</strong>
+                                ( samedi, dimanche).</p>
+
+                                En passant d'un mode à l'autre on peut observer:
+                                <ul>
+                                    <li>En semaine, trois piques d'utilisation correspondants sans doute
+                                    au départ au travail à partir de 7h30, déjeuner de midi et retour au
+                                    domicile entre 17h et 18h30.</li>
+                                    <li>Le weekend, une utilisation plus lissée sur l'ensemble de la
+                                    journée, avec des départs commençant un plus tard en matinée. Une
+                                    utilisation soutenue des vélos entre 11h à 17h30.</li>
+                                </ul>
+                            </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!--panel-body-->        </div>
+            </div> <!--tab-pane graphique 1 -->
+
+            <!-- Graphique 2 : Nombre de voyage dans l'espace par interval de temps -->
+            <div id="graph_map" class="tab-pane fade">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="padding: 8;">
+                        <h4><strong>Voyages dans le temps et dans l'espace: Départs et arrivées de vélos dans chaque station au cours de la journée</strong></h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" style="padding: 8;">
+                                <div class="btn-group" id="day-selector">
+                                    <button type="button" class="btn btn-primary active" id="weekday_button_map">Semaine</button>
+                                    <button type="button" class="btn btn-primary" id="weekend_button_map">Week-end</button>
+                                </div>
+                                Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
+                                <!--<span id="timeSliderVal">08:00-08:30</span>-->
+                        </div>
+                        <div class="row" style="padding: 8;">
+                            <table>
+                            <tr>
+                                <td>
+                                    <!-- Le graphique est inséré ici -->
+                                    <svg class="MyChart" id="svgchartmap" style="background-color: #B8B8B8;"></svg>
+                                </td>
+                                <td>
+                                    <!-- Description et legende -->
+                                    <h3>Description</h3>
+                                    <h4>Les données</h4>
+                                    <p>Les données présentées dans cette page proviennent d'un <strong>service de
+                                    partage de vélos de la ville de Los Angeles</strong>. Elles sont constitués des
+                                    enregistrement d'un peu plus de 132 000 voyages effectués sur une
+                                    période de 269 jours, entre juillet 2016 et avril 2017. Pour chaque voyage
+                                    sont connus ses stations de départ et d'arrivée, la position
+                                    géographique de ces stations, les heures des départ et d'arrivée, le
+                                    type d'abonnement utilisé.</p>
+
+                                    <p><a href="data/metro-bike-share-trip-data-orig.csv.zip">Fichier .csv original (zip)</a></p>
+
+                                    <p>Pour réaliser les graphiques nous avons pré-filtré ces données a
+                                    l'aide de <a href="scripts/">scripts Python</a> pour constituer des fichiers .csv de taille
+                                    plus petite pour faciliter leur exploitation.</p>
+
+                                    <p>Fichiers .csv utilisés pour ce graphique:
+                                    <a type="text/plain" href="data/trips_per_station_per_time_slot_weekday.csv">semaine</a> -
+                                    <a type="text/plain" href="data/trips_per_station_per_time_slot_weekend.csv">weekend</a>
+                                    </p>
+
+                                    <h4>La visualisation</h4>
+                                    <img src="images/legende-station.png" align="middle" style="float: left; margin: 4px;" />
+                                    <p>Cette visualisation présente sur une carte le <strong>nombre total de départs
+                                    et d'arrivées à chaque station</strong>, groupés par demi-heure au cours de la
+                                    journée. Un <i>slider</i> permet de changer la tranche d'heure a visualiser.
+                                    Les départs de la station sont représentés par un demi-cercle vert, les
+                                    arrivées par un demi-cercle rouge. La taille de ces demi-cercles est
+                                    proportionnelle aux nombre de voyages.</p>
+
+                                    <ul>
+                                    <li><strong>La localisation des stations</strong>, qui est une <strong>variable ordinale</strong>, a tout naturellement été décrite par la <strong>position</strong> sur la carte.</li>
+                                    <li>La <strong>variable ordinale</strong> du <strong>type de mouvement</strong> : arrivée ou départ est visualisée par une <strong>couleur</strong>: vert pour les départs, rouge pour les arrivées.</li>
+                                    <li><strong>Les nombres d'arrivées et de départs</strong> qui sont des <strong>variables numériques de rapport</strong> sont ici représentés par la <strong>taille</strong> des demi-dercles les représentants.</li>
+                                    </ul>
+
+                                    <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un <i>tooltip</i> s'affichant lorsque l'on pointe une station sur la carte.</p>
+
+                                    <p>Les données peuvent être affichées pour les jours de
+                                    <strong>semaine</strong> (lundi-vendredi) ou de <strong>weekend</strong>
+                                    ( samedi, dimanche).</p>
+                                    <p>Ce type de visualisation pourrait permettre à l'opérateur du réseau
+                                    d'optimiser le placements des vélos dans les stations au cours de la
+                                    journée. De déplacer les vélos depuis des stations recevant beaucoup
+                                    d'arrivées vers des stations où un grand nombre de départs est anticipé.</p>
+                                    <p>Par exemple, le weekend à 8h30, un grand nombre de départs sont
+                                    enregistrés depuis les stations 3014 et 3042 (en haut à droite de la
+                                    carte). Besoin de nombreux vélos disponibles. </br>
+                                    Inversement à 17h30, beaucoup de retour de vélos ont lieu dans ces
+                                    mêmes stations. Besoin d'avoir des places libres pour garer les vélos.</br>
+                                    (Ces deux stations ont l'air de correspondre à des stations de métro)</p>
+                                </td>
+                            </tr>
+                            </table>
+                        </div>
+                    </div> <!--panel-body-->
+                </div> <!--panel-->
+            </div> <!--tab-pane graphique 2-->
+        </div> <!--tab-content -->
+    </div> <!-- container-fluid-->
+
+    <!-- Chargement des scripts pour lire les données et tracer les graphiques -->
+    <script src="bike-mean-trips-per-day-per-timeslot.js"></script>
+    <script src="bike-trips-per-station-per-time-slot.js"></script>
+
+	<noscript>Vous devez activer JavaScript sur votre navigateur pour voir cette page</noscript>
 </body>
-
 </html>
