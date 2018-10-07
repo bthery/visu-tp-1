@@ -114,7 +114,7 @@ function drawStations(stationsData) {
     var scaleTripCount = d3.scale.linear().domain([0, maxTrips]).range([0, maxArc]);
 
     // Ajout d'un div pour le tooltip
-    var tooltip = d3.select("body").append("div")
+    var tooltip = d3.select("tab_contains_space").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
@@ -137,14 +137,14 @@ function drawStations(stationsData) {
         .endAngle(-180 * (Math.PI/180));
 
     // Creer le graphe
-    var chart = d3.select("#svgchart")
+    var chart = d3.select("#svgchartmap")
         .attr("width", mapWidth)
         .attr("height", mapHeight);
 
     // Ajout de la carte dans le fond
     chart.append("defs")
         .append("pattern")
-            .attr("id", "bgimage")
+            .attr("id", "bgimagela")
             .attr('patternUnits', 'userSpaceOnUse')
             .attr('width', mapWidth )
             .attr('height',mapHeight)
@@ -155,7 +155,7 @@ function drawStations(stationsData) {
     chart.append("rect")
         .attr("width", mapWidth)
         .attr("height", mapHeight)
-        .attr("fill", "url(#bgimage)");
+        .attr("fill", "url(#bgimagela)");
 
     // Ajoute autant d'élément g que de lignes de données
     // et positione les éléments
@@ -263,7 +263,7 @@ $("#timeSlider").on("slide", function(slideEvt) {
     timeSlot = slideEvt.value;
     $("#timeSliderVal").text(slotsLabels[timeSlot]);
     // Re-dessiner le graphique pour le nouvel interval
-    d3.select("#svgchart").selectAll("*").remove();
+    d3.select("#svgchartmap").selectAll("*").remove();
     if (weekend) {
         drawStations(weekendStationsData);
     } else {
@@ -279,7 +279,7 @@ $('#weekday_button').click(function() {
     console.log("Weekday!");
     if (weekend) {
         weekend = false;
-        d3.select("#svgchart").selectAll("*").remove();
+        d3.select("#svgchartmap").selectAll("*").remove();
         drawStations(weekdayStationsData);
     }
 });
@@ -288,8 +288,7 @@ $('#weekend_button').click(function() {
     console.log("Weekend!");
     if (!weekend) {
         weekend = true;
-        d3.select("#svgchart").selectAll("*").remove();
+        d3.select("#svgchartmap").selectAll("*").remove();
         drawStations(weekendStationsData);
     }
 });
-

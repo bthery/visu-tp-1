@@ -1,0 +1,216 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <style>
+
+    .MyChart a {
+            background: #a0d53f;
+            padding: 4;
+            border: 2px;
+            border-radius: 8px;
+        }
+
+        .MyChart text {
+            fill: black;
+            font: 10px sans-serif;
+            text-anchor: begin;
+        }
+
+
+        .axis text {
+            font: 14px sans-serif;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            stroke-width: 2;
+            opacity: 0.2;
+            shape-rendering: crispEdges;
+        }
+		.tab
+        {
+                border-radius: 30px;
+                display:inline-block;
+                margin-left:3px;
+                margin-right:3px;
+                padding:3px;
+                border:1px solid #aea9a9 ;
+                cursor:pointer;
+                background:#dddddd
+        }
+        .tab_0
+        {
+                /*background:#f4f1f1;*/
+                background:#dddddd
+                border-bottom:1px solid #d6d5d5;
+                color: grey;
+        }
+        .tab_1
+        {
+                background:#eee;
+                border-bottom:0px solid black;
+                padding-bottom:4px;
+                font-weight: 700;
+        }
+        .tab_contains
+        {
+                background-color:#dddddd;
+                border:1px solid black;
+                margin-top:-1px;
+                padding:5px;
+                display:none;
+        }
+
+
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 100px;
+            height: 48px;
+            padding: 2px;
+            font: 11px sans-serif;
+            background: white;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .slider-selection {
+            background: #a0d53f;
+        }
+
+        th, td {
+            vertical-align: top;
+            padding: 8px;
+        }
+        .legend {
+          padding: 4;
+          border: 2px;
+          border-radius: 8px;
+          font: 14px sans-serif;
+        }
+
+	</style>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Slider widget -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/css/bootstrap-slider.min.css">
+  <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.2.1/bootstrap-slider.min.js"></script>
+  <!-- D3JS-->
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+
+  <script type="text/javascript">
+  // onglets
+    function change_tab(name) {
+      document.getElementById('tab_' + anc_tab).className = 'tab_0 tab';
+      document.getElementById('tab_' + name).className = 'tab_1 tab';
+      document.getElementById('tab_contains_' + anc_tab).style.display = 'none';
+      document.getElementById('tab_contains_' + name).style.display = 'block';
+      anc_tab = name;
+    }
+
+  </script>
+  <title>Visualisation de données 2018-2019 TP1</title>
+
+</head>
+
+<body>
+  <div class="container-fluid">
+
+    <div class="jumbotron text-center">
+      Mastère Big Data 2018-2019: Visualisation de données TP1
+      <h2>Los Angeles Metro Bike Share</h2>
+      <div class="MyChart">
+        <a href="https://bikeshare.metro.net/about/">About</a>
+        <a href="https://bikeshare.metro.net/stations/">Stations</a>
+        <a href="https://www.kaggle.com/cityofLA/los-angeles-metro-bike-share-trip-data">Open Data</a>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="tab_0 tab" id="tab_space" onclick="javascript:change_tab('space');"> Voyage dans le temps et dans l'espace</h3>
+          <h4 class="tab_0 tab" id="tab_means" onclick="javascript:change_tab('means');"> Nombre moyen de voyages commencés par demi-heure au cours de la journée</h3>
+      </div>
+      <div class="panel-body">
+        <!-- nombre de voyage moyens -->
+        <div class="tab_contains" id="tab_contains_means">
+
+          <div class="row" style="padding: 8;">
+            <div class="btn-group" id="day-selector">
+              <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
+              <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
+            </div>
+          </div>
+          <div class="row" style="padding: 8;">
+            <table>
+              <tr>
+                <td>
+                  <!-- Le graphe est ici -->
+                  <svg class="MyChart" id="svgchart" style="background-color: #B8B8B8;"></svg>
+                </td>
+                <td class="legend">
+                  <h4>Legende</h4>
+                  <p>Ce graphique permet de visualiser le nombre de déplacements selon les heures de la journée.</p>
+                  <p><b>Les heures</b>, <b>variables quantitative d'intervalle</b>, sont représentés en <b>position</b> sur l'abscisse.</p>
+                  <p><b>Le nombre de déplacements</b> qui est <b>une variable quantitative de rapport</b>, sont eux , visualisé par la <b>taille</b> de la hauteur d'un rectangle.</p>
+                </td>
+            </table>
+          </div>
+        </div>
+        <!-- nombre de voyage dans l'espace -->
+        <div class="tab_contains" id="tab_contains_space">
+
+          <div class="row" style="padding: 8;">
+            <div class="btn-group" id="day-selector">
+              <button type="button" class="btn btn-primary" id="weekday_button">Semaine</button>
+              <button type="button" class="btn btn-primary" id="weekend_button">Week-end</button>
+            </div>
+            Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16" />
+            <!--<span id="timeSliderVal">08:00-08:30</span>-->
+          </div>
+          <div class="row" style="padding: 8;">
+            <table>
+              <tr>
+                <td>
+                  <!-- Le graphique est inséré ici -->
+                  <svg class="MyChart" id="svgchartmap" style="background-color: #B8B8B8;"></svg>
+                </td>
+                <td class="legend">
+                  <h3>Legende</h3>
+                  <!-- Legende -->
+                  <h5> Cette carte permet de visualiser les arrivées et départs de chaque station de location de vélos de la ville de Los Angeles.</h5>
+                  <img src="images/legende-station.png" style="display: block ;margin-left: auto; margin-right: auto" />
+                  <p>
+                    La <b> localisation des stations</b>, qui est une <b>variable ordinale</b> , a tout naturellement été décrite par la <b>position</b> sur la carte.</p>
+                  <p>
+                    la <b>variable ordinale</b> du <b>type de mouvement</b> : arrivé ou départ est visualisée par une<b>couleur</b> : vert pour les départs, rouge pour les arrivées.</p>
+                  <p>
+                    les <b>nombres d'arrivées</b> et de départs qui sont des <b>variables numériques de rapport</b> sont ici représentés par la <b>taille</b> du contour du point.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chargement du script pour lire les données et tracer le graphe -->
+  <script src=bike-mean-trips-per-day-per-timeslot.js></script>
+  <script type='text/javascript' src="bike-trips-per-station-per-time-slot.js"></script>
+
+  <script type="text/javascript">
+    var anc_tab = 'space';
+    change_tab(anc_tab);
+  </script>
+  <noscript>Vous devez activer JavaScript sur votre navigateur pour voir cette page</noscript>
+</body>
+
+</html>
