@@ -63,7 +63,7 @@ function weekdayStationsDataReady(error, csv) {
     drawStations(weekdayStationsData);
     console.log("data length: " + weekdayStationsData.length);
 
-    d3.csv("data/trips_per_station_per_time_slot_weekend.csv", weekendStationsDataReady);
+    d3.csv("data/trips-per-station-per-time-slot-weekend.csv", weekendStationsDataReady);
 }
 
 // Fonction appelée quand le .csv contenant les données des jours de weekend a été lu
@@ -252,7 +252,7 @@ initTimeSlotsLabels();
 
 // Chargement du fichier .csv contenant les données des jours de semaine
 // Attention: operation asynchrone! Le reste du code doit être dans la routine callback.
-d3.csv("data/trips_per_station_per_time_slot_weekday.csv", weekdayStationsDataReady);
+d3.csv("data/trips-per-station-per-time-slot-weekday.csv", weekdayStationsDataReady);
 
 // Le slider pour changer l'interval de temps
 $('#timeSlider').slider({

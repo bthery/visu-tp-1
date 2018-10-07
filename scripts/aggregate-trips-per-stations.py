@@ -43,8 +43,8 @@ mean_per_day = False
 #
 stations_weekend = {}
 stations_weekday = {}
-weekend_csv = "trips_per_station_per_time_slot_weekday.csv"
-weekday_csv = "trips_per_station_per_time_slot_weekend.csv"
+weekend_csv = "trips-per-station-per-time-slot-weekday.csv"
+weekday_csv = "trips-per-station-per-time-slot-weekend.csv"
 
 def slot_to_time(slot):
     '''Convert slot index to a string representing the slot start time (eg. 13:30)'''
