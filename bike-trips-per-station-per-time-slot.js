@@ -1,4 +1,6 @@
-// Visualisation des données TP1
+// Mastère Big Data : Visualisation des données TP1
+//
+// Cécile Boukamel-Donnou / Benjamin Thery
 //
 //     Los Angeles Metro Share Bike Trips data
 //
@@ -6,7 +8,7 @@
 // Bootstrap slider widget: https://seiyria.com/bootstrap-slider/
 
 var debug = false;
-var weekend = false;
+var weekendMap = false;
 var timeSlot = 16;
 
 // Découpage de la journée en interval de temps de 30 minutes
@@ -114,7 +116,7 @@ function drawStations(stationsData) {
     var scaleTripCount = d3.scale.linear().domain([0, maxTrips]).range([0, maxArc]);
 
     // Ajout d'un div pour le tooltip
-    var tooltip = d3.select("tab_contains_space").append("div")
+    var tooltipMap = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
@@ -178,10 +180,10 @@ function drawStations(stationsData) {
         .on("mouseover", function(d, i) {
             d3.select(this)
                 .attr("fill", "#ccfb76");
-            tooltip.transition()
+            tooltipMap.transition()
                 .duration(200)
                 .style("opacity", 0.9);
-            tooltip.html("<strong>Station " + d[ID_IDX] + "</strong></br>" +
+            tooltipMap.html("<strong>Station " + d[ID_IDX] + "</strong></br>" +
                          "Départs: " + d[START_SLOTS_IDX  + timeSlot] + "</br>" +
                          "Arrivées: " + d[END_SLOTS_IDX  + timeSlot])
                 .style("left", (d3.event.pageX) + "px")
@@ -190,7 +192,7 @@ function drawStations(stationsData) {
         .on("mouseout", function(d) {
             d3.select(this)
                 .attr("fill", "#a0d53f");
-            tooltip.transition()
+            tooltipMap.transition()
                 .duration(500)
                 .style("opacity", 0);
         });
@@ -264,7 +266,7 @@ $("#timeSlider").on("slide", function(slideEvt) {
     $("#timeSliderVal").text(slotsLabels[timeSlot]);
     // Re-dessiner le graphique pour le nouvel interval
     d3.select("#svgchartmap").selectAll("*").remove();
-    if (weekend) {
+    if (weekendMap) {
         drawStations(weekendStationsData);
     } else {
         drawStations(weekdayStationsData);
@@ -274,20 +276,21 @@ $("#timeSlider").on("slide", function(slideEvt) {
 //
 // Appelé quand les boutons semaine/weekend sont cliqués
 //
-$('#weekday_button').click(function() {
-    //$(this).addClass('active').siblings().removeClass('active');
+$('#weekday_button_map').click(function() {
+    $(this).siblings().removeClass('active');
     console.log("Weekday!");
-    if (weekend) {
-        weekend = false;
+    if (weekendMap) {
+        weekendMap = false;
         d3.select("#svgchartmap").selectAll("*").remove();
         drawStations(weekdayStationsData);
     }
 });
 
-$('#weekend_button').click(function() {
+$('#weekend_button_map').click(function() {
+    $(this).siblings().removeClass('active');
     console.log("Weekend!");
-    if (!weekend) {
-        weekend = true;
+    if (!weekendMap) {
+        weekendMap = true;
         d3.select("#svgchartmap").selectAll("*").remove();
         drawStations(weekendStationsData);
     }

@@ -1,4 +1,6 @@
-// Visualisation des données TP1
+// Mastère Big Data : Visualisation des données TP1
+//
+// Cécile Boukamel-Donnou / Benjamin Thery
 //
 //     Los Angeles Metro Share Bike Trips data
 //
@@ -6,7 +8,7 @@
 // - Tooltips: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
 
 var debug = false;
-var weekend = false;
+var weekendBar = false;
 var chartData = [];
 
 const WEEKDAY_IDX = 1;
@@ -33,7 +35,8 @@ function chartDataReady(error, csv) {
             console.log(chartData);
         }
     });
-    drawChart(weekend ? WEEKEND_IDX : WEEKDAY_IDX);
+
+    drawChart(weekendBar ? WEEKEND_IDX : WEEKDAY_IDX);
 }
 
 // Fonction dessinant le graphe en barre
@@ -52,7 +55,7 @@ function drawChart(dataIndex) {
     }
 
     // Ajout d'un div pour le tooltip
-    var tooltip = d3.select("body").append("div")
+    var tooltipBar = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
@@ -66,7 +69,7 @@ function drawChart(dataIndex) {
         .orient("right").ticks(5)
         .tickSize(chartWidth);
 
-    // Creer le graphe
+    // Creer le graphique
     var chart = d3.select("#svgchart")
         .attr("width", chartWidth)
 		.attr("height", chartHeight);
@@ -108,17 +111,17 @@ function drawChart(dataIndex) {
         .on("mouseover", function(d, i) {
             d3.select(this)
             	.attr("fill", "#ccfb76");
-            tooltip.transition()
+            tooltipBar.transition()
                 .duration(200)
                 .style("opacity", .7);
-            tooltip	.html(chartData[i][0] + "-" + chartData[(i+1) % chartData.length][0] + "<br/><b>"  + d[dataIndex] + " trips</b>")
+            tooltipBar.html(chartData[i][0] + "-" + chartData[(i+1) % chartData.length][0] + "<br/><b>"  + d[dataIndex] + " trips</b>")
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
             })
         .on("mouseout", function(d) {
             d3.select(this)
             	.attr("fill", "#a0d53f");
-            tooltip.transition()
+            tooltipBar.transition()
                 .duration(500)
                 .style("opacity", 0);
         });
@@ -160,20 +163,22 @@ function drawChart(dataIndex) {
 //
 // Appelé quand les boutons semaine/weekend sont cliqués
 //
-$('#weekday_button').click(function() {
-    //$(this).addClass('active').siblings().removeClass('active');
+
+$('#weekday_button_bar').click(function() {
+    $(this).siblings().removeClass('active');
     console.log("Weekday!");
-    if (weekend) {
-        weekend = false;
+    if (weekendBar) {
+        weekendBar = false;
         d3.select("#svgchart").selectAll("*").remove();
         drawChart(WEEKDAY_IDX);
     }
 });
 
-$('#weekend_button').click(function() {
+$('#weekend_button_bar').click(function() {
+    $(this).siblings().removeClass('active');
     console.log("Weekend!");
-    if (!weekend) {
-        weekend = true;
+    if (!weekendBar) {
+        weekendBar = true;
         d3.select("#svgchart").selectAll("*").remove();
         drawChart(WEEKEND_IDX);
     }
