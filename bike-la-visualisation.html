@@ -61,6 +61,7 @@
             opacity: 0.2;
             shape-rendering: crispEdges;
         }
+
 	</style>
 
 	<title>Visualisation de données 2018-2019 TP1</title>
@@ -81,28 +82,28 @@
         </div>
 
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#graph_bar"><strong>Graphique 1</strong></a></li>
-            <li><a data-toggle="tab" href="#graph_map"><strong>Graphique 2</strong></a></li>
+            <li class="active"><a data-toggle="tab" href="#graph_map"><strong>Graphique 1</strong></a></li>
+            <li><a data-toggle="tab" href="#graph_bar"><strong>Graphique 2</strong></a></li>
         </ul>
 
         <div class="tab-content">
 
             <!-- Graphique 1 : Nombre de voyages moyen par interval de temps -->
-            <div id="graph_bar" class="tab-pane fade in active">
+            <div id="graph_bar" class="tab-pane fade">
 
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading"  style="padding: 8px;">
                     <h4><strong>Nombre moyen de voyages commencés par demi-heure au cours de la journée</strong></h4>
                 </div>
 
                 <div class="panel-body">
-                    <div class="row" style="padding: 8;">
+                    <div class="row" style="padding: 8px;">
                         <div class="btn-group" id="day-selector">
                             <button type="button" class="btn btn-primary active" id="weekday_button_bar">Semaine</button>
                             <button type="button" class="btn btn-primary" id="weekend_button_bar">Week-end</button>
                         </div>
                     </div>
-                    <div class="row" style="padding: 8;">
+                    <div class="row" style="padding: 8px;">
                         <table class="MyTable" >
                             <tr>
                             <td>
@@ -124,11 +125,10 @@
                                 <p><a href="data/metro-bike-share-trip-data-orig.csv.zip">Fichier .csv original (zip)</a></p>
 
                                 <p>Pour réaliser les graphiques nous avons pré-filtré ces données a
-                                l'aide de scripts Python pour constituer des fichiers .csv de taille
+                                l'aide de <a href="scripts/">scripts Python</a> pour constituer des fichiers .csv de taille
                                 plus petite pour faciliter leur exploitation.</p>
 
-                                <a type="text/plain" href="data/bike-mean-trips-per-day-per-timeslot.csv">Fichier .csv</a> -
-                                <a href="scripts">Scripts Python</a>
+                                <a type="text/plain" href="data/bike-mean-trips-per-day-per-timeslot.csv">Fichier .csv</a>
 
                                 <h4>La visualisation</h4>
                                 <p>Cette visualisation présente sous forme de graphique en barre le
@@ -142,7 +142,8 @@
                                 quantitative de rapport</strong>, est lui visualisé par la taille de la
                                 hauteur d'un rectangle.</p>
 
-                                <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un <i>tooltip</i> s'affichant lorsque l'on pointe une barre du graphique</p>
+                                <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un
+                                <i>tooltip</i> s'affichant lorsque l'on pointe une barre du graphique</p>
 
                                 <p>Les données peuvent être affichées pour les jours de
                                 <strong>semaine</strong> (lundi-vendredi) ou de <strong>weekend</strong>
@@ -165,13 +166,13 @@
             </div> <!--tab-pane graphique 1 -->
 
             <!-- Graphique 2 : Nombre de voyage dans l'espace par interval de temps -->
-            <div id="graph_map" class="tab-pane fade">
+            <div id="graph_map" class="tab-pane fade in active">
                 <div class="panel panel-default">
-                    <div class="panel-heading" style="padding: 8;">
+                    <div class="panel-heading" style="padding: 8px;">
                         <h4><strong>Voyages dans le temps et dans l'espace: Départs et arrivées de vélos dans chaque station au cours de la journée</strong></h4>
                     </div>
                     <div class="panel-body">
-                        <div class="row" style="padding: 8;">
+                        <div class="row" style="padding: 8px;">
                                 <div class="btn-group" id="day-selector">
                                     <button type="button" class="btn btn-primary active" id="weekday_button_map">Semaine</button>
                                     <button type="button" class="btn btn-primary" id="weekend_button_map">Week-end</button>
@@ -179,7 +180,7 @@
                                 Horaire: <input id="timeSlider" type="text" data-slider-id="timeSliderSlider" data-slider-min="0" data-slider-max="47" data-slider-step="1" data-slider-value="16"/>
                                 <!--<span id="timeSliderVal">08:00-08:30</span>-->
                         </div>
-                        <div class="row" style="padding: 8;">
+                        <div class="row" style="padding: 8px;">
                             <table>
                             <tr>
                                 <td>
@@ -224,7 +225,8 @@
                                     <li><strong>Les nombres d'arrivées et de départs</strong> qui sont des <strong>variables numériques de rapport</strong> sont ici représentés par la <strong>taille</strong> des demi-dercles les représentants.</li>
                                     </ul>
 
-                                    <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un <i>tooltip</i> s'affichant lorsque l'on pointe une station sur la carte.</p>
+                                    <p>Les <strong>valeurs numériques</strong> peuvent être lues dans un
+                                    <i>tooltip</i> s'affichant lorsque l'on pointe une station sur la carte.</p>
 
                                     <p>Les données peuvent être affichées pour les jours de
                                     <strong>semaine</strong> (lundi-vendredi) ou de <strong>weekend</strong>
@@ -253,6 +255,6 @@
     <script src="bike-mean-trips-per-day-per-timeslot.js"></script>
     <script src="bike-trips-per-station-per-time-slot.js"></script>
 
-	<noscript>Vous devez activer JavaScript sur votre navigateur pour voir cette page</noscript>
+    <noscript>Vous devez activer JavaScript sur votre navigateur pour voir cette page</noscript>
 </body>
 </html>
