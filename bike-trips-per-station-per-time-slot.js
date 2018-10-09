@@ -149,7 +149,7 @@ function drawStations(stationsData) {
             .attr('width', mapWidth )
             .attr('height',mapHeight)
         .append("image")
-            .attr("xlink:href", "images/los-angeles-map.png")
+            .attr("xlink:href", "images/los-angeles-map.jpg")
             .attr('width', mapWidth )
             .attr('height', mapHeight);
     chart.append("rect")
