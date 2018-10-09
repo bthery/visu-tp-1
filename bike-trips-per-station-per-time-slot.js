@@ -242,6 +242,19 @@ function initTimeSlotsLabels() {
         console.log("Time slots labels: " + slotsLabels);
 }
 
+// Re-dessiner la carte pour un nouvel intervalle de temps
+function updateSlot(newTimeSlot) {
+    timeSlot = newTimeSlot;
+    $("#timeSliderVal").text(slotsLabels[timeSlot]);
+    // Re-dessiner le graphique pour le nouvel intervalle
+    d3.select("#svgchartmap").selectAll("*").remove();
+    if (weekendMap) {
+        drawStations(weekendStationsData);
+    } else {
+        drawStations(weekdayStationsData);
+    }
+};
+
 //
 // Main
 //
@@ -261,14 +274,12 @@ $('#timeSlider').slider({
 
 $("#timeSlider").on("slide", function(slideEvt) {
     timeSlot = slideEvt.value;
-    $("#timeSliderVal").text(slotsLabels[timeSlot]);
-    // Re-dessiner le graphique pour le nouvel interval
-    d3.select("#svgchartmap").selectAll("*").remove();
-    if (weekendMap) {
-        drawStations(weekendStationsData);
-    } else {
-        drawStations(weekdayStationsData);
-    }
+    updateSlot(timeSlot);
+});
+
+$("#timeSlider").on("change", function(slideEvt) {
+    timeSlot = slideEvt.value["newValue"];
+    updateSlot(timeSlot);
 });
 
 //
