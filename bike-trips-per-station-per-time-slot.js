@@ -9,15 +9,15 @@ var debug = false;
 var weekendMap = false;
 var timeSlot = 16;
 
-// Découpage de la journée en interval de temps de 30 minutes
+// Découpage de la journée en intervalle de temps de 30 minutes
 const SLOT_DURATION   = 30;
 const SLOTS_PER_HOUR  = Math.floor(60 / SLOT_DURATION);
 const SLOTS_PER_DAY   = 24 * SLOTS_PER_HOUR;
 
-var slotsLabels = [];         // Label pour chaque interval de temps (ex: 13:30)
+var slotsLabels = [];         // Label pour chaque intervalle de temps (ex: 13:30)
 
-var weekdayStationsData = []; // Nombres de voyages par station par interval de temps (lundi-vendredi)
-var weekendStationsData = []; // Nombres de voyages par station par interval de temps (samedi-dimanche)
+var weekdayStationsData = []; // Nombres de voyages par station par intervalle de temps (lundi-vendredi)
+var weekendStationsData = []; // Nombres de voyages par station par intervalle de temps (samedi-dimanche)
 
 // Index des différentes données dans les entrées du tableau stationsData
 const ID_IDX          = 0;
@@ -213,7 +213,7 @@ function drawStations(stationsData) {
         .attr("text-anchor", "middle")
         .text(function(d) { return "" + d[0]; });
 
-    // Ajoute l'interval de temps
+    // Ajoute l'intervalle de temps
     chart.append("text")
         .attr("x", 50)
         .attr("y", 50)
@@ -226,7 +226,7 @@ function drawStations(stationsData) {
     console.log("Chart drawn !");
 } // drawStations()
 
-// Initialise une table contenant les labels des intervals de temps: ex. "13:30-14:00"
+// Initialise une table contenant les labels des intervalles de temps: ex. "13:30-14:00"
 function initTimeSlotsLabels() {
 
     var slotLabel = function(s) {
@@ -252,7 +252,7 @@ initTimeSlotsLabels();
 // Attention: operation asynchrone! Le reste du code doit être dans la routine callback.
 d3.csv("data/trips-per-station-per-time-slot-weekday.csv", weekdayStationsDataReady);
 
-// Le slider pour changer l'interval de temps
+// Le slider pour changer l'intervalle de temps
 $('#timeSlider').slider({
     formatter: function(value) {
         return slotsLabels[value];
