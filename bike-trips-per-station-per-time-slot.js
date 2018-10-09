@@ -4,8 +4,6 @@
 //
 //     Los Angeles Metro Share Bike Trips data
 //
-// Using:
-// Bootstrap slider widget: https://seiyria.com/bootstrap-slider/
 
 var debug = false;
 var weekendMap = false;

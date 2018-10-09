@@ -4,8 +4,6 @@
 //
 //     Los Angeles Metro Share Bike Trips data
 //
-// With help from:
-// - Tooltips: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
 
 var debug = false;
 var weekendBar = false;
